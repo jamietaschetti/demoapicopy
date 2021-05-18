@@ -1,0 +1,66 @@
+service:
+    name: '${opt:stackid}' ## DO NOT EDIT THIS LINE
+  
+provider:
+    deploymentBucket: ## DO NOT EDIT THIS LINE
+        name: ${opt:accountid}-serverless-deployment ## DO NOT EDIT THIS LINE
+    name: aws  ## DO NOT EDIT THIS LINE
+    stage: '${opt:stage,''dev''}'  ## DO NOT EDIT THIS LINE
+    stackName: 'Serverless-${opt:client}-${opt:stackid}-${self:provider.stage}-${opt:region}'  ## DO NOT EDIT THIS LINE
+## Lambda Configs
+    runtime: python3.7 # global runtime, if more than one function is being deployed, you can overwrite below
+    memorySize: 512 # optional, in MB, default is 1024
+    timeout: 10 # optional, in seconds, default is 6
+    versionFunctions: false # optional, default is true
+
+
+
+##REFERENCE
+## Example lambda Function refer to https://www.serverless.com/framework/docs/providers/aws/guide/functions/
+
+
+
+
+
+functions:
+    functionOne:
+        handler: lambda_function.lambda_handler
+        role: '${opt:role}' ## This will be passed by Jenkins no need to create a role
+        runtime: python3.7 # optional overwrite, default is provider runtime
+        name: ${opt:client}-${opt:stackid}-${self:provider.stage}- ##Add your function name here ## only append this line
+        description: Description of what the lambda function does # optional, Description to publish to AWS
+        vpc: ## DO NOT EDIT THIS LINE
+            securityGroupIds: ## DO NOT EDIT THIS LINE
+                - ${opt:securityGroupId1} ## DO NOT EDIT THIS LINE
+            subnetIds: ## DO NOT EDIT THIS LINE
+                - ${opt:subnetId1} ## DO NOT EDIT THIS LINE
+                - ${opt:subnetId2} ## DO NOT EDIT THIS LINE
+            
+    functionTwo:
+        handler: lambda_function.lambda_handler
+        role: '${opt:role}' ## This will be passed by Jenkins no need to create a role
+        runtime: python3.7 # optional overwrite, default is provider runtime
+        name: ${opt:client}-${opt:stackid}-${self:provider.stage}- ##Add your function name here ## only append this line
+        description: Description of what the lambda function does # optional, Description to publish to AWS
+        vpc: ## DO NOT EDIT THIS LINE
+            securityGroupIds: ## DO NOT EDIT THIS LINE
+                - ${opt:securityGroupId1} ## DO NOT EDIT THIS LINE
+            subnetIds: ## DO NOT EDIT THIS LINE
+                - ${opt:subnetId1} ## DO NOT EDIT THIS LINE
+                - ${opt:subnetId2} ## DO NOT EDIT THIS LINE
+            
+
+
+#OTHER resources
+#resources:  ## DO NOT EDIT THIS LINE
+    #Example Resource, from this point down all is Based On cloudformation, the only difference is the variable syntax Only needed if NOT attached to the lambas
+    #IF attached to the lambdas in way of event trigger use the events: option under the lambda
+    #Resources: ## DO NOT EDIT THIS LINE
+        # S3Bucket:
+        #   Type: AWS::S3::Bucket
+        #   Properties:
+        #     BucketName: ${opt:accountid}-my-bucket-${opt:region}
+        # SqsQueue:
+        #     Type: AWS::SQS::Queue
+        #     Properties:
+        #         #etc
